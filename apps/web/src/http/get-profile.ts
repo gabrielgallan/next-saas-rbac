@@ -1,3 +1,4 @@
+import { UserDTO } from '@saas/entities'
 import { api } from './api-client'
 
 interface HttpGetProfileRequest {
@@ -5,7 +6,7 @@ interface HttpGetProfileRequest {
 }
 
 interface HttpGetProfileResponse {
-    user: any
+    user: Omit<UserDTO, 'id' | 'updatedAt' | 'passwordHash'>
 }
 
 export async function httpGetProfile({ token }: HttpGetProfileRequest)

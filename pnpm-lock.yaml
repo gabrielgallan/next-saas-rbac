@@ -99,6 +99,9 @@ importers:
 
   apps/web:
     dependencies:
+      '@saas/entities':
+        specifier: workspace:*
+        version: link:../../packages/entities
       '@saas/env':
         specifier: workspace:*
         version: link:../../packages/env

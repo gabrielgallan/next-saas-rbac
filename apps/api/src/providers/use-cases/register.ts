@@ -1,8 +1,8 @@
-import { prisma } from "@/lib/prisma"
-import { hash } from "bcryptjs"
 import { UserAlreadyExistsError } from "./errors/user-already-exists"
+import { UsersRepository } from "../repositories/users-repository"
+import { OrganizationsRepository } from "../repositories/organizations-repository"
 import { User } from "@saas/entities"
-import { PrismaUserMapper } from "../repositories/prisma/mappers/prisma-user-mapper"
+import { hash } from "bcryptjs"
 
 type RegisterUseCaseRequest = {
   name: string
@@ -10,19 +10,21 @@ type RegisterUseCaseRequest = {
   password: string
 }
 
-type RegisterUseCaseResponse = {
-  user: User
-}
+type RegisterUseCaseResponse = void
 
 export class RegisterUseCase {
+  constructor(
+    private usersRepository: UsersRepository,
+    private organizationsRepository: OrganizationsRepository
+  ) {}
+
   async execute({
     name,
     email,
     password,
   }: RegisterUseCaseRequest): Promise<RegisterUseCaseResponse> {
-    const userWithSameEmail = await prisma.user.findUnique({
-      where: { email }
-    })
+
+    const userWithSameEmail = await this.usersRepository.findByEmail(email)
 
     if (userWithSameEmail) {
       throw new UserAlreadyExistsError()
@@ -30,32 +32,17 @@ export class RegisterUseCase {
 
     const [_, domain] = email.split('@')
 
-    const autoJoinOrganization = await prisma.organization.findFirst({
-      where: {
-        domain,
-        shouldAttachUsersByDomain: true
-      }
-    })
+    const autoJoinOrganization = await this.organizationsRepository
+      .findByDomainAndShouldAttach(domain)
 
-    const prismaUser = await prisma.user.create({
-      data: {
+      const user = User.create({
         name,
         email,
-        passwordHash: await hash(password, 6),
-        members_on: autoJoinOrganization
-          ? {
-              create: {
-                organizationId: autoJoinOrganization.id
-              }
-            } 
-          : undefined
-      }
-    })
+        passwordHash: await hash(password, 6)
+      })
 
-    const user = PrismaUserMapper.toEntity(prismaUser)
+    await this.usersRepository.create(user, autoJoinOrganization ?? undefined)
 
-    return {
-      user
-    }
+    return
   }
 }

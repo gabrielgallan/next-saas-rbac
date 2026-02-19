@@ -7,7 +7,7 @@ export class PrismaUserMapper {
             name: raw.name,
             email: raw.email,
             passwordHash: raw.passwordHash,
-            createdAd: raw.createdAt,
+            createdAt: raw.createdAt,
             updatedAt: raw.updatedAt
         }, raw.id)
 
@@ -20,7 +20,7 @@ export class PrismaUserMapper {
             name: user.name,
             email: user.email,
             passwordHash: user.passwordHash,
-            createdAt: user.createdAd,
+            createdAt: user.createdAt,
             updatedAt: user.updatedAt ?? undefined
         }
 

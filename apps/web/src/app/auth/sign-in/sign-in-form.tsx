@@ -77,13 +77,7 @@ export function SignInForm() {
                 </div>
 
                 <Button type="submit" className="w-full">
-                    {isPending ? <Loader2 className="size-4 animate-spin" /> : 'Sign in with e-mail'}
-                </Button>
-
-                <Button variant='link' size='sm' className="w-full">
-                    <Link href="/auth/sign-up">
-                        Don't have an account ? Sign up
-                    </Link>
+                    {isPending ? <Loader2 className="size-4 animate-spin" /> : 'Sign in'}
                 </Button>
             </form>
 
@@ -99,6 +93,12 @@ export function SignInForm() {
                     Sign in with GitHub
                 </Button>
             </form>
+
+            <Button variant='link' size='sm' className="w-full">
+                <Link href="/auth/sign-up">
+                    Don't have an account ? Sign up
+                </Link>
+            </Button>
         </div>
     )
 }
