@@ -1,0 +1,22 @@
+import { api } from './api-client'
+
+interface HttpGetProfileRequest {
+    token: string
+}
+
+interface HttpGetProfileResponse {
+    user: any
+}
+
+export async function httpGetProfile({ token }: HttpGetProfileRequest)
+{
+    const result = await api
+        .get('profile', {
+            headers: {
+                Authorization: `Bearer ${token}`,
+            }
+        })
+        .json<HttpGetProfileResponse>()
+
+    return result
+}

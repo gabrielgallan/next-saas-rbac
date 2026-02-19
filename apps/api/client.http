@@ -1,0 +1,136 @@
+@baseURL = http://localhost:3333
+@authToken = {{authenticate_with_pass.response.body.token}}
+@authTokenGithub = {{authenticate_with_github.response.body.token}}
+@refreshTokenCookie = {{authenticate_with_pass.response.headers.set-cookie}}
+
+# @name register
+POST {{baseURL}}/api/accounts
+Content-Type: application/json
+
+{
+    "name": "Teste",
+    "email": "gab@gallan.com",
+    "password": "123456"
+}
+
+###
+
+# @name authenticate_with_pass
+POST {{baseURL}}/api/sessions/password
+Content-Type: application/json
+
+{
+    "email": "gab@gallancorp.com",
+    "password": "gab123"
+}
+
+###
+
+# https://github.com/login/oauth/authorize?client_id=Ov23liEE6t7N3Uli4ATL&redirect_uri=http://localhost:3000/api/auth/callback&scope=user:email
+# @name authenticate_with_github
+POST {{baseURL}}/api/sessions/github
+Content-Type: application/json
+
+{
+    "code": "8f9fc0413f17f5f51f20"
+}
+
+###
+
+# @name refresh_token
+PATCH {{baseURL}}/api/sessions/refresh
+Cookie: {{refreshTokenCookie}};
+
+###
+
+# @name profile
+GET {{baseURL}}/api/profile
+Content-Type: application/json
+Authorization: Bearer {{authToken}}
+
+###
+
+# @name password_recover
+POST {{baseURL}}/api/password/recover
+Content-Type: application/json
+
+{
+    "email": "gab@gallancorp.com"
+}
+
+###
+
+# @name password_reset
+PATCH  {{baseURL}}/api/password
+Content-Type: application/json
+
+{
+    "code": "faa0a8b9-7d44-46ff-a6b9-a92da6885298",
+    "password": "gab123"
+}
+
+###
+
+# @name create_organization
+POST   {{baseURL}}/api/organizations
+Content-Type: application/json
+Authorization: Bearer {{authToken}}
+
+{
+    "name": "Gallan Corp",
+    "domain": "gallancorp.com",
+    "shouldAttachUsersByDomain": true
+}
+
+###
+
+@orgSlug = gallan-corp
+
+# @name get_membership
+GET {{baseURL}}/api/organizations/{{orgSlug}}/membership
+Content-Type: application/json
+Authorization: Bearer {{authToken}}
+
+###
+
+# @name get_organization
+GET {{baseURL}}/api/organizations/{{orgSlug}}
+Content-Type: application/json
+Authorization: Bearer {{authToken}}
+
+###
+
+# @name get_organizations
+GET {{baseURL}}/api/organizations
+Content-Type: application/json
+Authorization: Bearer {{authToken}}
+
+###
+
+# @name update_organization
+PUT {{baseURL}}/api/organizations/{{orgSlug}}
+Content-Type: application/json
+Authorization: Bearer {{authToken}}
+
+{
+    "name": "Gallan Corpo",
+    "domain": "gallan.com",
+    "shouldAttachUsersByDomain": true
+}
+
+###
+
+# @name shutdown_organization
+DELETE {{baseURL}}/api/organizations/{{orgSlug}}
+Authorization: Bearer {{authToken}}
+
+###
+
+# @name transfer_organization_ownership
+PATCH {{baseURL}}/api/organizations/{{orgSlug}}/owner
+Content-Type: application/json
+Authorization: Bearer {{authToken}}
+
+{
+    "transferToUserId": "b8bdfade-fd9b-4ed2-b13e-2de3cdb7b6a6"
+}

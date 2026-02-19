@@ -26,6 +26,7 @@ coverage
 out/
 build
 dist
+generated/
 
 
 # Debug
@@ -36,3 +37,10 @@ yarn-error.log*
 # Misc
 .DS_Store
 *.pem
+
+# Prisma
+client/
+migrations/
+
+# Next.js
+next-env.d.ts

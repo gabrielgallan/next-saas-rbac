@@ -1,0 +1,24 @@
+{
+  "name": "@saas/eslint-config",
+  "version": "0.0.0",
+  "type": "module",
+  "private": true,
+  "exports": {
+    "./base": "./base.js",
+    "./next-js": "./next.js"
+  },
+  "devDependencies": {
+    "@next/eslint-plugin-next": "^16.1.6",
+    "@saas/prettier": "workspace:*",
+    "eslint": "^10.0.0",
+    "eslint-plugin-only-warn": "^1.1.0",
+    "eslint-plugin-react": "^7.37.5",
+    "eslint-plugin-turbo": "^2.8.9",
+    "globals": "^17.3.0",
+    "typescript-eslint": "^8.56.0"
+  },
+  "prettier": "@saas/prettier",
+  "eslintConfig": {
+    "extends": ["./base.js"]
+  }
+}
