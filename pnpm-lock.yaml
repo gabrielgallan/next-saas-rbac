@@ -38,9 +38,9 @@ importers:
       '@saas/auth':
         specifier: workspace:*
         version: link:../../packages/auth
-      '@saas/entities':
+      '@saas/core':
         specifier: workspace:*
-        version: link:../../packages/entities
+        version: link:../../packages/core
       '@saas/env':
         specifier: workspace:*
         version: link:../../packages/env
@@ -99,9 +99,9 @@ importers:
 
   apps/web:
     dependencies:
-      '@saas/entities':
+      '@saas/core':
         specifier: workspace:*
-        version: link:../../packages/entities
+        version: link:../../packages/core
       '@saas/env':
         specifier: workspace:*
         version: link:../../packages/env
@@ -236,7 +236,7 @@ importers:
         specifier: workspace:*
         version: link:../../config/typescript-config
 
-  packages/entities:
+  packages/core:
     dependencies:
       zod:
         specifier: 4.3.6

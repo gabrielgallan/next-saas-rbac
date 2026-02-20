@@ -1,7 +1,7 @@
 import { UserAlreadyExistsError } from "./errors/user-already-exists"
 import { UsersRepository } from "../repositories/users-repository"
 import { OrganizationsRepository } from "../repositories/organizations-repository"
-import { User } from "@saas/entities"
+import { User } from "@saas/core"
 import { hash } from "bcryptjs"
 
 type RegisterUseCaseRequest = {

@@ -1,4 +1,4 @@
-import { User, Organization } from "@saas/entities";
+import { User, Organization } from "@saas/core";
 
 export interface UsersRepository {
     create(user: User, joinOrganization?: Organization): Promise<void>

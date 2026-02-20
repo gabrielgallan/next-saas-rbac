@@ -1,4 +1,4 @@
-import { User } from "@saas/entities";
+import { User } from "@saas/core";
 import { User as PrismaUser, Prisma } from "prisma/client";
 
 export class PrismaUserMapper {

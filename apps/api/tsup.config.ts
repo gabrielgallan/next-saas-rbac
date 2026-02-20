@@ -8,6 +8,6 @@ export default defineConfig({
   noExternal: [
     '@saas/auth', 
     '@saas/env',
-    '@saas/entities'
+    '@saas/core'
   ],
 })

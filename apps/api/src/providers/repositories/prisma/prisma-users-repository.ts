@@ -1,7 +1,7 @@
 import { UsersRepository } from "../users-repository";
 import { prisma } from "@/lib/prisma";
 import { PrismaUserMapper } from "./mappers/prisma-user-mapper";
-import { Organization, User } from "@saas/entities";
+import { Organization, User } from "@saas/core";
 
 export class PrismaUsersRepository implements UsersRepository {
     async create(user: User, joinOrganization?: Organization) {

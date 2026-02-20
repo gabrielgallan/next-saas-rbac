@@ -1,4 +1,4 @@
-import { UserDTO } from '@saas/entities'
+import { UserDTO } from '@saas/core'
 import { api } from './api-client'
 
 interface HttpGetProfileRequest {

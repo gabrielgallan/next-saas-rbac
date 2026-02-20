@@ -1,4 +1,4 @@
-import { Organization } from "@saas/entities";
+import { Organization } from "@saas/core";
 import { Organization as PrismaOrganization, Prisma } from "prisma/client";
 
 export class PrismaOrganizationMapper {
