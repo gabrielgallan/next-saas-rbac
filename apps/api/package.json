@@ -12,7 +12,6 @@
         "lint": "eslint --fix"
     },
     "dependencies": {
-        "@saas/core": "workspace:*",
         "@fastify/cookie": "11.0.2",
         "@fastify/cors": "^11.2.0",
         "@fastify/jwt": "10.0.0",
@@ -21,12 +20,15 @@
         "@prisma/adapter-pg": "7.4.0",
         "@prisma/client": "7.4.0",
         "@saas/auth": "workspace:*",
+        "@saas/core": "workspace:*",
         "@saas/env": "workspace:*",
         "bcryptjs": "3.0.3",
         "dotenv": "17.3.1",
         "fastify": "^5.7.4",
         "fastify-plugin": "5.1.0",
         "fastify-type-provider-zod": "^6.1.0",
+        "ky": "1.14.3",
+        "nodemailer": "8.0.1",
         "pg": "8.18.0",
         "zod": "^4.3.6",
         "zod-prisma-types": "3.3.11"
@@ -36,6 +38,7 @@
         "@saas/prettier": "workspace:*",
         "@saas/tsconfig": "workspace:*",
         "@types/node": "^25.2.3",
+        "@types/nodemailer": "7.0.10",
         "dotenv-cli": "11.0.0",
         "prisma": "7.4.0",
         "tsconfig-paths": "4.2.0",

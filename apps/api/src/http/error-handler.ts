@@ -5,6 +5,7 @@ import { BadRequestError } from './errors/bad-request-error'
 import { UnauthorizedError } from './errors/unauthorized-error'
 import { ConflictError } from './errors/conflict-error'
 import { NotFoundError } from './errors/not-found-error'
+import { BadGatewayError } from './errors/bad-gateway-error'
 
 type FastifyErrorHandler = FastifyInstance['errorHandler']
 
@@ -40,9 +41,15 @@ export const errorHandler: FastifyErrorHandler = (error, request, reply) => {
     })
   }
 
+  if (error instanceof BadGatewayError) {
+    return reply.status(502).send({
+      message: error.message,
+    })
+  }
+
   console.error(error)
 
   // send error to some observability platform
 
-  return reply.status(500).send({ message: 'Internal server error!' })
+  return reply.status(500).send({ message: 'Internal server error' })
 }

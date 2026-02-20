@@ -1,10 +1,10 @@
 import { Organization } from "@saas/core";
-import { Prisma, Organization as PrismaOrganization } from "prisma/client";
+import { Organization as PrismaOrganization } from "prisma/client";
 
 export class PrismaOrganizationMapper {
     static toEntity(raw: PrismaOrganization): Organization {
         const organization = Organization.create({
-            ownerId: raw.userId,
+            ownerId: raw.ownerId,
             name: raw.name,
             slug: raw.slug,
             domain: raw.domain,
@@ -17,17 +17,17 @@ export class PrismaOrganizationMapper {
         return organization
     }
 
-    static toPrisma(organization: Organization): Prisma.OrganizationUncheckedCreateInput {
+    static toPrisma(organization: Organization): PrismaOrganization {
         return {
             id: organization.id,
-            userId: organization.ownerId,
+            ownerId: organization.ownerId,
             name: organization.name,
             slug: organization.slug,
-            domain: organization.domain,
+            domain: organization.domain ?? null,
             shouldAttachUsersByDomain: organization.shouldAttachUsersByDomain,
             avatarUrl: organization.avatarUrl,
             createdAt: organization.createdAt,
-            updatedAt: organization.updatedAt ?? undefined
+            updatedAt: organization.updatedAt
         }
     }
 }

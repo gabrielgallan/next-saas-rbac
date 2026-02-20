@@ -22,7 +22,7 @@ export class ShutdownOrganizationUseCase {
 
         const authOrganization = organizationSchema.parse({
             id: organization.id,
-            ownerId: organization.userId
+            ownerId: organization.ownerId
         })
 
         const permissions = defineAbilityFor(authUser)

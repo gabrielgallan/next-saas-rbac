@@ -1,12 +1,12 @@
-import { prisma } from "@/lib/prisma"
 import { organizationSchema, userSchema, defineAbilityFor } from "@saas/auth"
-import { Organization } from "prisma/client"
 import { NotAllowedError } from "./errors/not-allowed"
 import { OrgazinationAlreadyExistsError } from "./errors/organization-already-exists"
+import { MembersRepository } from "../repositories/members-repository"
+import { OrganizationsRepository } from "../repositories/organizations-repository"
 
 type UpdateOrganizationUseCaseRequest = {
     userId: string
-    organization: Organization
+    organizationId: string
     name?: string
     domain?: string
     shouldAttachUsersByDomain?: boolean
@@ -15,21 +15,26 @@ type UpdateOrganizationUseCaseRequest = {
 type UpdateOrganizationUseCaseResponse = void
 
 export class UpdateOrganizationUseCase {
+    constructor(
+        private membersRepository: MembersRepository,
+        private organizationRepository: OrganizationsRepository
+    ) {}
+
     async execute({
         userId,
-        organization,
+        organizationId,
         name,
         domain,
         shouldAttachUsersByDomain
     }: UpdateOrganizationUseCaseRequest): Promise<UpdateOrganizationUseCaseResponse> {
-        const membership = await prisma.member.findFirst({
-            where: {
-                userId,
-                organizationId: organization.id
-            }
-        })
+        const membership = await this.membersRepository.findByUserIdAndOrganizationId(
+            userId,
+            organizationId
+        )
 
-        if (!membership) {
+        const organization = await this.organizationRepository.findById(organizationId)
+
+        if (!membership || !organization) {
             throw new NotAllowedError()
         }
 
@@ -40,7 +45,7 @@ export class UpdateOrganizationUseCase {
 
         const authOrganization = organizationSchema.parse({
             id: organization.id,
-            ownerId: organization.userId
+            ownerId: organization.ownerId
         })
 
         const permissions = defineAbilityFor(authUser)
@@ -50,30 +55,24 @@ export class UpdateOrganizationUseCase {
         }
 
         if (domain) {
-            const otherOrganizationWithSameDomain = await prisma.organization.findFirst({
-                where: {
-                    domain,
-                    slug: {
-                        not: organization.slug
-                    }
-                }
-            })
+            const otherOrganizationWithSameDomain = await this.organizationRepository.findByDomain(domain)
 
             if (otherOrganizationWithSameDomain) {
                 throw new OrgazinationAlreadyExistsError()
             }
+
+            organization.domain = domain
         }
 
-        await prisma.organization.update({
-            where: {
-                id: organization.id
-            }, 
-            data: {
-                name,
-                domain,
-                shouldAttachUsersByDomain
-            }
-        })
+        if (name) {
+            organization.name = name
+        }
+
+        if (shouldAttachUsersByDomain) {
+            organization.shouldAttachUsersByDomain = shouldAttachUsersByDomain
+        }
+
+        await this.organizationRepository.save(organization)
 
         return
     }

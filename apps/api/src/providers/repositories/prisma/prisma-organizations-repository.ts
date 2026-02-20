@@ -4,6 +4,20 @@ import { PrismaOrganizationMapper } from "./mappers/prisma-organization-mapper";
 import { Organization } from "@saas/core";
 
 export class PrismaOrganizationsRepository implements OrganizationsRepository {
+    async findManyFromMemberUserId(userId: string) {
+        const organizations = await prisma.organization.findMany({
+            where: {
+                members: {
+                    some: {
+                        userId
+                    }
+                }
+            }
+        })
+
+        return organizations.map(PrismaOrganizationMapper.toEntity)
+    }
+
     async create(organization: Organization) {
         const data = PrismaOrganizationMapper.toPrisma(organization)
 
@@ -12,7 +26,7 @@ export class PrismaOrganizationsRepository implements OrganizationsRepository {
                 ...data,
                 members: {
                     create: {
-                        userId: data.userId,
+                        userId: data.ownerId,
                         role: 'ADMIN'
                     }
                 }
