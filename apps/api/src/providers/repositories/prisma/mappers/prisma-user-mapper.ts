@@ -6,6 +6,7 @@ export class PrismaUserMapper {
         const user = User.create({
             name: raw.name,
             email: raw.email,
+            avatarUrl: raw.avatarUrl,
             passwordHash: raw.passwordHash,
             createdAt: raw.createdAt,
             updatedAt: raw.updatedAt
@@ -15,15 +16,14 @@ export class PrismaUserMapper {
     }
 
     static toPrisma(user: User): Prisma.UserUncheckedCreateInput {
-        const prisma = {
+        return {
             id: user.id,
             name: user.name,
             email: user.email,
+            avatarUrl: user.avatarUrl,
             passwordHash: user.passwordHash,
             createdAt: user.createdAt,
             updatedAt: user.updatedAt ?? undefined
         }
-
-        return prisma
     }
 }

@@ -1,10 +1,10 @@
 import { FastifyInstance } from "fastify";
 import { ZodTypeProvider } from "fastify-type-provider-zod";
-import z from 'zod'
-import { UserSchema } from "prisma/client/zod"
-import { GetProfileUseCase } from "@/providers/use-cases/get-profile";
+import z from 'zod';
 import { ResourceNotFoundError } from "@/providers/use-cases/errors/resource-not-found";
 import { NotFoundError } from "@/http/errors/not-found-error";
+import { userSchema } from "@saas/core";
+import { makeGetProfileUseCase } from "@/providers/use-cases/factories/make-get-profile-use-case";
 
 export async function profile(app: FastifyInstance) {
     app.withTypeProvider<ZodTypeProvider>().get(
@@ -15,9 +15,10 @@ export async function profile(app: FastifyInstance) {
                 tags: ['user'],
                 response: {
                     200: z.object({
-                        user: UserSchema.omit({
-                            id: true,
-                            passwordHash: true,
+                        user: userSchema.pick({
+                            name: true,
+                            email: true,
+                            avatarUrl: true
                         })
                     })
                 }
@@ -26,7 +27,7 @@ export async function profile(app: FastifyInstance) {
         async (request, reply) => {
             const userId = await request.getCurrentUserId()
 
-            const getProfileUseCase = new GetProfileUseCase()
+            const getProfileUseCase = makeGetProfileUseCase()
 
             try {
                 const { user } = await getProfileUseCase.execute({
@@ -34,7 +35,11 @@ export async function profile(app: FastifyInstance) {
                 })
 
                 return reply.status(200).send({
-                    user
+                    user: {
+                        name: user.name ?? null,
+                        email: user.email,
+                        avatarUrl: user.avatarUrl ?? null
+                    }
                 })
             } catch (err) {
                 if (err instanceof ResourceNotFoundError) {

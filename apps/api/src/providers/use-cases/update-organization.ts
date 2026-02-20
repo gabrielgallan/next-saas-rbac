@@ -1,11 +1,11 @@
 import { prisma } from "@/lib/prisma"
 import { organizationSchema, userSchema, defineAbilityFor } from "@saas/auth"
-import { Member, Organization } from "prisma/client"
+import { Organization } from "prisma/client"
 import { NotAllowedError } from "./errors/not-allowed"
 import { OrgazinationAlreadyExistsError } from "./errors/organization-already-exists"
 
 type UpdateOrganizationUseCaseRequest = {
-    membership: Member
+    userId: string
     organization: Organization
     name?: string
     domain?: string
@@ -16,14 +16,25 @@ type UpdateOrganizationUseCaseResponse = void
 
 export class UpdateOrganizationUseCase {
     async execute({
-        membership,
+        userId,
         organization,
         name,
         domain,
         shouldAttachUsersByDomain
     }: UpdateOrganizationUseCaseRequest): Promise<UpdateOrganizationUseCaseResponse> {
+        const membership = await prisma.member.findFirst({
+            where: {
+                userId,
+                organizationId: organization.id
+            }
+        })
+
+        if (!membership) {
+            throw new NotAllowedError()
+        }
+
         const authUser = userSchema.parse({
-            id: membership.userId,
+            id: userId,
             role: membership.role
         })
 

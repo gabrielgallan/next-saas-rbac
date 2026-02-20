@@ -16,6 +16,7 @@ import { signInWithCredentials } from "./actions"
 import { useFormState } from "@/hooks/use-form-state"
 import { useRouter } from "next/navigation"
 import { signInWithGithub } from "../actions"
+import Image from "next/image"
 
 const githubIcon = '/github.svg'
 
@@ -69,7 +70,7 @@ export function SignInForm() {
                     )}
 
                     <Link
-                        href="/auth/forgot-password"
+                        href="/session/forgot-password"
                         className="text-xs font-medium text-foreground hover:underline"
                     >
                         Forgot your password?
@@ -85,7 +86,9 @@ export function SignInForm() {
 
             <form action={signInWithGithub}>
                 <Button type="submit" className="w-full">
-                    <img
+                    <Image
+                        width={0}
+                        height={0}
                         className="size-5 mr-2 dark:invert"
                         src={githubIcon}
                         alt=""
@@ -95,8 +98,8 @@ export function SignInForm() {
             </form>
 
             <Button variant='link' size='sm' className="w-full">
-                <Link href="/auth/sign-up">
-                    Don't have an account ? Sign up
+                <Link href="/session/sign-up">
+                    {`Don't have an account ? Sign up`}
                 </Link>
             </Button>
         </div>

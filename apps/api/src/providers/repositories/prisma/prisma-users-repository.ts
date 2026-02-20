@@ -11,14 +11,14 @@ export class PrismaUsersRepository implements UsersRepository {
             data: {
                 ...prismaUser,
                 members_on: joinOrganization ?
-                {
-                    create: {
-                        organizationId: joinOrganization.id
-                    }
-                } : undefined
+                    {
+                        create: {
+                            organizationId: joinOrganization.id
+                        }
+                    } : undefined
             }
         })
-        
+
         return
     }
 
@@ -34,5 +34,32 @@ export class PrismaUsersRepository implements UsersRepository {
         }
 
         return PrismaUserMapper.toEntity(user)
+    }
+
+    async findById(id: string) {
+        const user = await prisma.user.findUnique({
+            where: {
+                id
+            }
+        })
+
+        if (!user) {
+            return null
+        }
+
+        return PrismaUserMapper.toEntity(user)
+    }
+
+    async save(user: User) {
+        const data = PrismaUserMapper.toPrisma(user)
+
+        await prisma.user.update({
+            where: {
+                id: user.id
+            },
+            data
+        })
+
+        return
     }
 }

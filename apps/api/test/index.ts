@@ -1,4 +1,4 @@
-import { defineAbilityFor, organizationSchema, projectSchema, userSchema } from '@saas/auth'
+import { defineAbilityFor, organizationSchema, userSchema } from '@saas/auth'
 
 const user1 = userSchema.parse({
     id: 'user-1',

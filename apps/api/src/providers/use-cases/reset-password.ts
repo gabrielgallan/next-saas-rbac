@@ -1,6 +1,7 @@
-import { prisma } from "@/lib/prisma"
 import { ResourceNotFoundError } from "./errors/resource-not-found"
 import { hash } from "bcryptjs"
+import { UsersRepository } from "../repositories/users-repository"
+import { TokensRepository } from "../repositories/tokens-repository"
 
 type ResetPasswordUseCaseRequest = {
     tokenId: string
@@ -10,32 +11,37 @@ type ResetPasswordUseCaseRequest = {
 type ResetPasswordUseCaseResponse = void
 
 export class ResetPasswordUseCase {
+    constructor(
+        private usersRepository: UsersRepository,
+        private tokensRepository: TokensRepository,
+
+    ) {}
+
   async execute(
     {
         tokenId,
         password
     }: ResetPasswordUseCaseRequest): Promise<ResetPasswordUseCaseResponse> {
-    const token = await prisma.token.findUnique({
-        where: { 
-            id: tokenId,
-            type: 'PASSWORD_RECOVER'
-        }
-    })
+    const token = await this.tokensRepository.findByIdAndType(
+        tokenId,
+        'PASSWORD_RECOVER'
+    )
 
     if (!token) {
         throw new ResourceNotFoundError()
     }
 
+    const user = await this.usersRepository.findById(token.userId)
+
+    if (!user) {
+        throw new ResourceNotFoundError()
+    }
+
     const passwordHash = await hash(password, 6)
 
-    const user = await prisma.user.update({
-        where: { 
-            id: token.userId
-        },
-        data: {
-            passwordHash
-        }
-    })
+    user.passwordHash = passwordHash
+
+    await this.usersRepository.save(user)
 
     return
   }

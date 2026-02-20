@@ -20,7 +20,7 @@ POST {{baseURL}}/api/sessions/password
 Content-Type: application/json
 
 {
-    "email": "gab@gallancorp.com",
+    "email": "gabriel31.gal@gmail.com",
     "password": "gab123"
 }
 
@@ -55,7 +55,7 @@ POST {{baseURL}}/api/password/recover
 Content-Type: application/json
 
 {
-    "email": "gab@gallancorp.com"
+    "email": "gabriel31.gal@gmail.com"
 }
 
 ###
@@ -65,8 +65,8 @@ PATCH  {{baseURL}}/api/password
 Content-Type: application/json
 
 {
-    "code": "faa0a8b9-7d44-46ff-a6b9-a92da6885298",
-    "password": "gab123"
+    "code": "bb6fb71d-5fa1-46ac-b0a2-215eca32fd79",
+    "password": "gallan"
 }
 
 ###

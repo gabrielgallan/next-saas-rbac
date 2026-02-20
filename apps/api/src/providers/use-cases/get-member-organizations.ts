@@ -1,14 +1,11 @@
 import { prisma } from "@/lib/prisma"
-import { Organization } from "prisma/client"
-import { OrgazinationAlreadyExistsError } from "./errors/organization-already-exists"
-import createSlug from "../utils/create-slug"
 
 type GetMemberOrganizationsUseCaseRequest = {
     userId: string
 }
 
 type GetMemberOrganizationsUseCaseResponse = {
-    organizations: any
+    organizations: unknown
 }
 
 export class GetMemberOrganizationsUseCase {

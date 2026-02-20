@@ -30,4 +30,32 @@ export class Organization extends Entity<OrganizationProps> {
     get name() {
         return this.props.name
     }
+    
+    get ownerId(): OrganizationProps['ownerId'] {
+        return this.props.ownerId
+    }
+
+    get slug(): OrganizationProps['slug'] {
+        return this.props.slug
+    }
+
+    get domain(): OrganizationProps['domain'] {
+        return this.props.domain
+    }
+
+    get shouldAttachUsersByDomain(): OrganizationProps['shouldAttachUsersByDomain'] {
+        return this.props.shouldAttachUsersByDomain
+    }
+
+    get avatarUrl(): OrganizationProps['avatarUrl'] {
+        return this.props.avatarUrl
+    }
+
+    get createdAt(): OrganizationProps['createdAt'] {
+        return this.props.createdAt
+    }
+
+    get updatedAt(): OrganizationProps['updatedAt'] {
+        return this.props.updatedAt
+    }
 }

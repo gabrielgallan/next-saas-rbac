@@ -1,4 +1,4 @@
-import { isAuthenticated } from '@/auth/auth'
+import { isAuthenticated } from '@/strategies/authentication/auth'
 import { redirect } from 'next/navigation'
 
 export default async function AuthLayout({

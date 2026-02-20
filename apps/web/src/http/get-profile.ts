@@ -1,15 +1,15 @@
 import { UserDTO } from '@saas/core'
 import { api } from './api-client'
 
-interface HttpGetProfileRequest {
+type HTTPGetProfileRequest = {
     token: string
 }
 
-interface HttpGetProfileResponse {
+type HTTPGetProfileResponse = {
     user: Omit<UserDTO, 'id' | 'updatedAt' | 'passwordHash'>
 }
 
-export async function httpGetProfile({ token }: HttpGetProfileRequest)
+export async function HTTPGetProfile({ token }: HTTPGetProfileRequest)
 {
     const result = await api
         .get('profile', {
@@ -17,7 +17,7 @@ export async function httpGetProfile({ token }: HttpGetProfileRequest)
                 Authorization: `Bearer ${token}`,
             }
         })
-        .json<HttpGetProfileResponse>()
+        .json<HTTPGetProfileResponse>()
 
     return result
 }

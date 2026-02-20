@@ -1,7 +1,7 @@
-import { prisma } from "@/lib/prisma"
-import { compare, hash } from "bcryptjs"
+import { compare } from "bcryptjs"
 import { ResourceNotFoundError } from "./errors/resource-not-found"
 import { InvalidCredentialsError } from "./errors/invalid-credentials"
+import { UsersRepository } from "../repositories/users-repository"
 
 type AuthenticateWithPassUseCaseRequest = {
   email: string
@@ -13,13 +13,15 @@ type AuthenticateWithPassUseCaseResponse = {
 }
 
 export class AuthenticateWithPassUseCase {
+  constructor(
+    private usersRepository: UsersRepository
+  ) {}
+
   async execute({
     email,
     password,
   }: AuthenticateWithPassUseCaseRequest): Promise<AuthenticateWithPassUseCaseResponse> {
-    const user = await prisma.user.findUnique({
-      where: { email }
-    })
+    const user = await this.usersRepository.findByEmail(email)
 
     if (!user || !user.passwordHash) {
       throw new ResourceNotFoundError()

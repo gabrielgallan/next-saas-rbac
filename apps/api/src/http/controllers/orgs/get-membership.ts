@@ -1,9 +1,6 @@
 import { FastifyInstance } from "fastify";
 import { ZodTypeProvider } from "fastify-type-provider-zod";
 import { z } from 'zod'
-import { ConflictError } from "@/http/errors/conflict-error";
-import { CreateOrganizationUseCase } from "@/providers/use-cases/create-organization";
-import { OrgazinationAlreadyExistsError } from "@/providers/use-cases/errors/organization-already-exists";
 import { MemberSchema } from "prisma/client/zod";
 
 export async function getMembership(app: FastifyInstance)

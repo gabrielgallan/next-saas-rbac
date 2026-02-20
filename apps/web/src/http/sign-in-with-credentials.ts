@@ -1,18 +1,18 @@
 import { api } from './api-client'
 
-interface HttpSignInWithCredentialsRequest {
+type HTTPSignInWithCredentialsRequest = {
   email: string
   password: string
 }
 
-interface HttpSignInWithCredentialsResponse {
+type HTTPSignInWithCredentialsResponse = {
   token: string
 }
 
-export async function httpSignInWithCredentials({
+export async function HTTPSignInWithCredentials({
   email,
   password,
-}: HttpSignInWithCredentialsRequest) {
+}: HTTPSignInWithCredentialsRequest) {
   const result = await api
     .post('sessions/password', {
       json: {
@@ -20,7 +20,7 @@ export async function httpSignInWithCredentials({
         password,
       },
     })
-    .json<HttpSignInWithCredentialsResponse>()
+    .json<HTTPSignInWithCredentialsResponse>()
 
   return result
 }

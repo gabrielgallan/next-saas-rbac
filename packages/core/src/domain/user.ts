@@ -3,6 +3,7 @@ import { Entity } from "./entity"
 interface UserProps {
     name?: string | null
     email: string
+    avatarUrl?: string | null
     passwordHash?: string |null
     createdAt?: Date
     updatedAt?: Date | null
@@ -16,6 +17,7 @@ export class User extends Entity<UserProps> {
         const user = new User({
             ...props,
             name: props.name ?? null,
+            avatarUrl: props.avatarUrl ?? null,
             passwordHash: props.passwordHash ?? null,
             createdAt: props.createdAt ?? new Date(),
             updatedAt: props.updatedAt ?? null
@@ -32,6 +34,10 @@ export class User extends Entity<UserProps> {
         return this.props.email
     }
 
+    get avatarUrl() {
+        return this.props.avatarUrl
+    }
+
     get passwordHash() {
         return this.props.passwordHash
     }
@@ -42,5 +48,9 @@ export class User extends Entity<UserProps> {
 
     get updatedAt() {
         return this.props.updatedAt
+    }
+
+    set passwordHash(password: string | null | undefined) {
+        this.props.passwordHash = password
     }
 }

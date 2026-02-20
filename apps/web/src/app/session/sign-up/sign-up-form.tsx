@@ -10,6 +10,7 @@ import { signUp } from "./actions"
 import { useFormState } from "@/hooks/use-form-state"
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
 import { AlertTriangle, Loader2 } from "lucide-react"
+import Image from "next/image"
 
 
 export function SignUpForm() {
@@ -74,7 +75,9 @@ export function SignUpForm() {
             <Separator />
 
             <Button type="submit" className="w-full">
-                <img
+                <Image
+                    width={0}
+                    height={0}
                     className="size-5 mr-2 dark:invert"
                     src={githubIcon}
                     alt=""
@@ -83,7 +86,7 @@ export function SignUpForm() {
             </Button>
 
             <Button variant='link' size='sm' className="w-full">
-                <Link href="/auth/sign-in">
+                <Link href="/session/sign-in">
                     Already registered ? Sign In
                 </Link>
             </Button>

@@ -1,7 +1,7 @@
-import { prisma } from "@/lib/prisma"
-import { Organization } from "prisma/client"
+import { Organization } from "@saas/core"
 import { OrgazinationAlreadyExistsError } from "./errors/organization-already-exists"
 import createSlug from "../utils/create-slug"
+import { OrganizationsRepository } from "../repositories/organizations-repository"
 
 type CreateOrganizationUseCaseRequest = {
     userId: string
@@ -15,35 +15,33 @@ type CreateOrganizationUseCaseResponse = {
 }
 
 export class CreateOrganizationUseCase {
+    constructor(
+        private organizationsRepository: OrganizationsRepository
+    ) {}
+
     async execute({
         userId,
         name,
         domain,
         shouldAttachUsersByDomain
     }: CreateOrganizationUseCaseRequest): Promise<CreateOrganizationUseCaseResponse> {
-        const organizationWithSameDomain = await prisma.organization.findUnique({
-            where: { domain }
-        })
-
-        if (organizationWithSameDomain) {
-            throw new OrgazinationAlreadyExistsError()
+        if (domain) {
+            const organizationWithSameDomain = await this.organizationsRepository.findByDomain(domain)
+            
+            if (organizationWithSameDomain) {
+                throw new OrgazinationAlreadyExistsError()
+            }
         }
 
-        const organization = await prisma.organization.create({
-            data: {
-                name,
-                slug: createSlug(name),
-                domain,
-                shouldAttachUsersByDomain,
-                userId,
-                members: {
-                    create: {
-                        userId,
-                        role: 'ADMIN'
-                    }
-                }
-            }
+        const organization = Organization.create({
+            ownerId: userId,
+            name,
+            slug: createSlug(name),
+            domain,
+            shouldAttachUsersByDomain
         })
+
+        await this.organizationsRepository.create(organization)
 
         return {
             organization,

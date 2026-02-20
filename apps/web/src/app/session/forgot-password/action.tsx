@@ -1,18 +1,15 @@
 'use server'
 
-import { httpRegister } from "@/http/register"
-import { httpSignInWithCredentials } from "@/http/sign-in-with-credentials"
+import { HTTPRecoverPassword } from "@/http/recover-password"
 import { HTTPError } from "ky"
 import z from "zod"
 
-export async function signUp(
+export async function requestPasswordRecover(
     // previousState: any,
     formData: FormData
 ) {
     const formDataSchema = z.object({
-        name: z.string(),
         email: z.string().email({ message: 'Please, provide a valid e-mail address.' }),
-        password: z.string().min(6, { message: 'Password must have 6 characters' })
     })
 
     const parser = formDataSchema.safeParse(Object.fromEntries(formData))
@@ -23,14 +20,11 @@ export async function signUp(
         return { success: false, message: null, errors }
     }
 
-    const { name, email, password } = parser.data
+    const { email } = parser.data
 
     try {
-        const response = await httpRegister({
-            name,
-            email,
-            password,
-        })
+        await HTTPRecoverPassword({ email })
+        
     } catch (err) {
         if (err instanceof HTTPError) {
             const { message } = await err.response.json()

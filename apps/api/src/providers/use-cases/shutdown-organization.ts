@@ -1,6 +1,6 @@
 import { prisma } from "@/lib/prisma"
 import { organizationSchema, userSchema, defineAbilityFor } from "@saas/auth"
-import { Member, Organization, Role } from "prisma/client"
+import { Member, Organization } from "prisma/client"
 import { NotAllowedError } from "./errors/not-allowed"
 
 type ShutdownOrganizationUseCaseRequest = {

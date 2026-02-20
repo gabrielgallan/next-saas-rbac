@@ -8,8 +8,8 @@
         "db:studio": "pnpm env:load prisma studio",
         "env:load": "dotenv -e ../../.env --",
         "build": "tsup",
-        "start": "pnpm env:load node dist/http/server.js",
-        "test": "pnpm env:load tsx watch test/index.ts"
+        "start": "pnpm env:load node dist/http/server.mjs",
+        "lint": "eslint --fix"
     },
     "dependencies": {
         "@saas/core": "workspace:*",
@@ -41,11 +41,5 @@
         "tsconfig-paths": "4.2.0",
         "tsup": "8.5.1",
         "tsx": "^4.21.0"
-    },
-    "eslintConfig": {
-        "extends": [
-            "@saas/eslint-config/next"
-        ]
-    },
-    "prettier": "@saas/prettier"
+    }
 }

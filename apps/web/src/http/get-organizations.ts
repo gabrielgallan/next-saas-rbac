@@ -1,14 +1,15 @@
+import { OrganizationDTO } from '@saas/core'
 import { api } from './api-client'
 
-interface HttpGetOrganizationsRequest {
+type HTTPGetOrganizationsRequest = {
     token: string
 }
 
-interface HttpGetOrganizationsResponse {
-    organizations: any
+type HTTPGetOrganizationsResponse = {
+    organizations: OrganizationDTO[]
 }
 
-export async function httpGetOrganizations({ token }: HttpGetOrganizationsRequest)
+export async function HTTPGetOrganizations({ token }: HTTPGetOrganizationsRequest)
 {
     const result = await api
         .get('organizations', {
@@ -16,7 +17,7 @@ export async function httpGetOrganizations({ token }: HttpGetOrganizationsReques
                 Authorization: `Bearer ${token}`,
             }
         })
-        .json<HttpGetOrganizationsResponse>()
+        .json<HTTPGetOrganizationsResponse>()
 
     return result
 }

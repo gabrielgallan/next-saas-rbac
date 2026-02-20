@@ -1,9 +1,9 @@
 import { BadRequestError } from "@/http/errors/bad-request-error";
-import { AuthenticateWithGithubUseCase } from "@/providers/use-cases/authenticate-with-github";
+import { makeAuthenticateWithGithubUseCase } from "@/providers/use-cases/factories/make-authenticate-with-github-use-case";
 import { env } from "@saas/env";
 import { FastifyInstance } from "fastify";
 import { ZodTypeProvider } from "fastify-type-provider-zod";
-import { z } from 'zod'
+import { z } from 'zod';
 
 export async function authenticateWithGithub(app: FastifyInstance) {
     app.withTypeProvider<ZodTypeProvider>().post(
@@ -77,7 +77,9 @@ export async function authenticateWithGithub(app: FastifyInstance) {
                 throw new BadRequestError('Provide a e-mail in your github account to authenticate!')
             }
 
-            const { userId } = await new AuthenticateWithGithubUseCase().execute({
+            const authenticateWithGithub = makeAuthenticateWithGithubUseCase()
+
+            const { userId } = await authenticateWithGithub.execute({
                 githubId,
                 name,
                 email,

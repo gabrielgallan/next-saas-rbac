@@ -1,11 +1,8 @@
 import { FastifyInstance } from "fastify";
 import { ZodTypeProvider } from "fastify-type-provider-zod";
-import { z } from 'zod'
-import { RegisterUseCase } from "@/providers/use-cases/register";
-import { UserAlreadyExistsError } from "@/providers/use-cases/errors/user-already-exists";
-import { ConflictError } from "@/http/errors/conflict-error";
+import { z } from 'zod';
 import { ResourceNotFoundError } from "@/providers/use-cases/errors/resource-not-found";
-import { RequestPasswordRecoverUseCase } from "@/providers/use-cases/request-password-recover";
+import { makeRequestPasswordRecoverUseCase } from "@/providers/use-cases/factories/make-request-password-recover-use-case";
 
 export async function requestPasswordRecover(app: FastifyInstance)
 {
@@ -26,10 +23,10 @@ export async function requestPasswordRecover(app: FastifyInstance)
         async (request, reply) => {
             const { email } = request.body
 
-            const requestPasswordRecoverUseCase = new RequestPasswordRecoverUseCase()
+            const requestPasswordRecoverUseCase = makeRequestPasswordRecoverUseCase()
 
             try {
-                const { token } = await requestPasswordRecoverUseCase.execute({
+                await requestPasswordRecoverUseCase.execute({
                     email
                 })
 

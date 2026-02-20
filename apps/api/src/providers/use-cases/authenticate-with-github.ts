@@ -1,4 +1,6 @@
-import { prisma } from "@/lib/prisma"
+import { UsersRepository } from "../repositories/users-repository"
+import { User } from "@saas/core"
+import { AccountsRepository } from "../repositories/accounts-repository"
 
 type AuthenticateWithGithubUseCaseRequest = {
     githubId: string
@@ -12,42 +14,41 @@ type AuthenticateWithGithubUseCaseResponse = {
 }
 
 export class AuthenticateWithGithubUseCase {
+    constructor(
+        private usersRepository: UsersRepository,
+        private accountsRepository: AccountsRepository
+    ) { }
+
     async execute({
         githubId,
         name,
         email,
         avatarUrl
     }: AuthenticateWithGithubUseCaseRequest): Promise<AuthenticateWithGithubUseCaseResponse> {
-        let user = await prisma.user.findUnique({
-            where: { email }
-        })
+        let user = await this.usersRepository.findByEmail(email)
 
         if (!user) {
-            user = await prisma.user.create({
-                data: {
-                    email,
-                    name,
-                    avatarUrl,
-                },
+            user = User.create({
+                name,
+                email,
+                avatarUrl
             })
+
+            await this.usersRepository.create(user)
         }
 
-        let account = await prisma.account.findUnique({
-            where: {
-                provider_userId: {
-                    provider: 'GITHUB',
-                    userId: user.id,
-                },
-            },
-        })
+        const account = await this.accountsRepository.findByProviderAndUserId(
+            'GITHUB',
+            user.id
+        )
 
         if (!account) {
-            account = await prisma.account.create({
-                data: {
-                    provider: 'GITHUB',
-                    providerAccountId: githubId,
-                    userId: user.id,
-                },
+            await this.accountsRepository.create({
+                provider: 'GITHUB',
+                providerAccountId: githubId,
+                user: {
+                    connect: { id: user.id }
+                }
             })
         }
 

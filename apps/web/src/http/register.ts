@@ -1,19 +1,18 @@
 import { api } from './api-client'
 
-interface HttpRegisterRequest {
+type HTTPRegisterRequest = {
     name: string
     email: string
     password: string
 }
 
-interface HttpRegisterResponse {
-}
+type HTTPRegisterResponse = null
 
-export async function httpRegister({
+export async function HTTPRegister({
     name,
     email,
     password,
-}: HttpRegisterRequest) {
+}: HTTPRegisterRequest) {
     const result = await api
         .post('accounts', {
             json: {
@@ -22,7 +21,7 @@ export async function httpRegister({
                 password,
             },
         })
-        .json<HttpRegisterResponse>()
+        .json<HTTPRegisterResponse>()
 
     return result
 }

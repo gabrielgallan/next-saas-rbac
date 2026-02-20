@@ -1,6 +1,6 @@
 import { redirect } from 'next/navigation'
 
-import { isAuthenticated } from '@/auth/auth'
+import { isAuthenticated } from '@/strategies/authentication/auth'
 
 export default async function AppLayout({
   children,
@@ -10,7 +10,7 @@ export default async function AppLayout({
   sheet: React.ReactNode
 }>) {
   if (!(await isAuthenticated())) {
-    redirect('/auth/sign-in')
+    redirect('/session/sign-in')
   }
 
   return (
