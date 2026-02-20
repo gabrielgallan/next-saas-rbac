@@ -1,19 +1,20 @@
 import { Entity } from "./entity"
+import type { Optional } from "./optional"
 
 interface OrganizationProps {
     ownerId: string
     name: string
     slug: string
-    domain?: string | null
+    domain: string | null
     shouldAttachUsersByDomain: boolean
-    avatarUrl?: string | null
-    createdAt?: Date
-    updatedAt?: Date | null
+    avatarUrl: string | null
+    createdAt: Date
+    updatedAt: Date
 }
 
 export class Organization extends Entity<OrganizationProps> {
     static create(
-        props: OrganizationProps, 
+        props: Optional<OrganizationProps, 'avatarUrl' | 'createdAt' | 'domain' | 'updatedAt'>, 
         id?: string
     ) {
         const user = new Organization({
@@ -21,7 +22,7 @@ export class Organization extends Entity<OrganizationProps> {
             domain: props.domain ?? null,
             avatarUrl: props.avatarUrl ?? null,
             createdAt: props.createdAt ?? new Date(),
-            updatedAt: props.updatedAt ?? null
+            updatedAt: props.updatedAt ?? new Date()
         }, id)
 
         return user
@@ -57,5 +58,17 @@ export class Organization extends Entity<OrganizationProps> {
 
     get updatedAt(): OrganizationProps['updatedAt'] {
         return this.props.updatedAt
+    }
+
+    set name(name: string) {
+        this.props.name = name
+    }
+
+    set domain(domain: string) {
+        this.props.domain = domain
+    }
+
+    set shouldAttachUsersByDomain(should: boolean) {
+        this.props.shouldAttachUsersByDomain = should
     }
 }
